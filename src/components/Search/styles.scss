@@ -1,0 +1,20 @@
+.search {
+    position: relative;
+    img {
+        position: absolute;
+        left: 90%;
+        filter: invert(86%) sepia(100%) saturate(2399%) hue-rotate(110deg) brightness(118%) contrast(119%);
+    }
+    input {
+        padding: 5px 35px 3px 3px;
+        border: none;
+        border-bottom: 1px solid rgb(87 96 106);
+        outline: none;
+        font-size: 16px;
+        background: none;
+        color: white;
+        &:focus {
+            border-bottom: 1px solid #02f2f3;
+        }
+    }
+}
