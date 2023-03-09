@@ -1,9 +1,9 @@
-import { Repositories } from './Repositories';
+import { Repository } from './Repositores';
 import { AppDispatch } from './AppDispatch';
 import { ErrorMessage } from './ErrorMessage';
 
 export type {
-    Repositories,
+    Repository,
     AppDispatch,
     ErrorMessage
 }

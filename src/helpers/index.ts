@@ -1,10 +1,7 @@
 import useDebounce from "./useDebounce";
-import { apolloClient, httpLink } from './apollo-client';
-import { getFetchRequest } from './fetchInstance';
+import { apolloClient } from './apollo-client';
 
 export {
     useDebounce,
-    apolloClient,
-    httpLink,
-    getFetchRequest
+    apolloClient
 };

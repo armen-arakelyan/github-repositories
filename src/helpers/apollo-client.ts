@@ -1,17 +1,7 @@
-import { ApolloClient, InMemoryCache, HttpLink } from "@apollo/client";
-
-export const httpLink = new HttpLink({
-  uri: "https://api.github.com/search/repositories",
-  useGETForQueries: true,
-  headers: {
-    "Content-Type": "application/json",
-  },
-  fetch: (uri, options) => {
-    return fetch(uri.toString().replace(/query/g, "q"), options);
-  },
-});
+import { ApolloClient, InMemoryCache } from "@apollo/client";
 
 export const apolloClient = new ApolloClient({
-  link: httpLink,
+  headers: { 'Authorization': `token ${process.env.REACT_APP_GITHUB_TOKEN}` },
+  uri: "https://api.github.com/graphql",
   cache: new InMemoryCache(),
 });

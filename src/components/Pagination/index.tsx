@@ -4,23 +4,30 @@ import "./styles.scss";
 
 interface PaginationProps {
   totalPosts: number;
-  postsPerPage: number;
   setCurrentPage: (page: number) => void;
   currentPage: number;
-  maxSize: number;
+  maxSize?: number;
 }
 
 const Pagination: React.FC<PaginationProps> = ({
   totalPosts,
-  postsPerPage,
   setCurrentPage,
   currentPage,
-  maxSize
+  maxSize = totalPosts,
 }) => {
   const pages = useMemo(() => {
-    const totalPages = Math.ceil(totalPosts / postsPerPage);
-    return Array.from({ length: maxSize || totalPages }, (_, i) => i + 1);
-  }, [totalPosts, postsPerPage, maxSize]);
+    let startPage = Math.max(1, currentPage - Math.floor(maxSize / 2));
+    const endPage = Math.min(totalPosts, startPage + maxSize - 1);
+
+    if (endPage - startPage < maxSize - 1) {
+      startPage = Math.max(1, endPage - maxSize + 1);
+    }
+
+    return Array.from(
+      { length: endPage - startPage + 1 },
+      (_, i) => startPage + i
+    );
+  }, [totalPosts, currentPage, maxSize]);
 
   if (totalPosts === 0) {
     return null;
@@ -28,17 +35,15 @@ const Pagination: React.FC<PaginationProps> = ({
 
   return (
     <div className="pagination">
-      {pages.map((page, index) => {
-        return (
-          <button
-            key={index}
-            onClick={() => setCurrentPage(page)}
-            className={page === currentPage ? "active" : ""}
-          >
-            {page}
-          </button>
-        );
-      })}
+      {pages.map((page) => (
+        <button
+          key={page}
+          onClick={() => setCurrentPage(page)}
+          className={page === currentPage ? "active" : ""}
+        >
+          {page}
+        </button>
+      ))}
     </div>
   );
 };

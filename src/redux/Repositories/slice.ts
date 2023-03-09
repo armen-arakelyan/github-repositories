@@ -3,7 +3,8 @@ import { createSlice } from '@reduxjs/toolkit';
 const initialState = {
   loading: false,
   error: null,
-  data: null,
+  data: [],
+  repositoryCount: 0
 };
 
 const slice = createSlice({
@@ -16,12 +17,13 @@ const slice = createSlice({
     fetchDataSuccess: (state, action) => {
       state.loading = false;
       state.error = null;
-      state.data = action.payload;
+      state.data = action.payload.repositories;
+      state.repositoryCount = action.payload.repositoryCount;
     },
     fetchDataFail: (state, action) => {
       state.loading = false;
       state.error = action.payload;
-      state.data = null;
+      state.data = [];
     },
   },
 });

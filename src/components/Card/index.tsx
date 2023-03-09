@@ -22,7 +22,7 @@ const Card = ({ title, stars, lastCommit, url, id }: IProps) => {
     <div className="card" onClick={() => navigate(`/${id}`)}>
       <div>
         <h2>{title}</h2>
-        {stars ? starsArr.map(itm => <img key={itm} src={Star} alt="Star" />) : null}
+        {starsArr.length <=5 ? starsArr.map(itm => <img key={itm} src={Star} alt="Star" />) : <p>{stars}</p>}
         <p>{new Date(lastCommit).toLocaleString()}</p>
         <p>{url}</p>
       </div>
