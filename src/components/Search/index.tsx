@@ -4,11 +4,12 @@ import "./styles.scss";
 
 interface IProps {
   handleSearch: (e: React.FormEvent<HTMLInputElement>) => void;
+  value: string;
 }
 
-const Search = ({ handleSearch }: IProps) => (
+const Search = ({ handleSearch, value }: IProps) => (
    <div className="search">
-    <input type="text" onChange={handleSearch} />
+    <input type="text" onChange={handleSearch} value={value} />
     <img src={SearchIcon} alt="search icon" />
    </div>
 );

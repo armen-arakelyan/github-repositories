@@ -5,13 +5,14 @@ import "./styles.scss";
 interface IProps {
   handleSearch: (e: React.FormEvent<HTMLInputElement>) => void;
   totalCount: number;
+  searchValue: string;
 }
 
-const Header = ({ handleSearch, totalCount }: IProps) => {
+const Header = ({ handleSearch, totalCount, searchValue }: IProps) => {
   return (
     <div className="header">
       <h2>Github Repositories ({totalCount})</h2>
-      <Search handleSearch={handleSearch} />
+      <Search handleSearch={handleSearch} value={searchValue} />
     </div>
   );
 };
