@@ -1,0 +1,23 @@
+name: Lock Master Branch
+
+on:
+  workflow_run:
+    workflows: ["Name of your workflow that runs on master branch"]
+    types:
+      - completed
+
+jobs:
+  lock-branch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          ref: "master"
+          
+      - name: Lock Branch
+        uses: peter-evans/branch-lock-action@v0.9.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          lock_reason: "Branch is locked until workflow completes successfully."
+          unlock_at: "success"
