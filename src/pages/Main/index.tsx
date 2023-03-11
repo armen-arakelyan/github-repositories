@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { CardsContainer, Header, Pagination } from "../../components";
 import { useDebounce } from "../../helpers";
 import { RootState } from "../../redux";
@@ -10,16 +11,18 @@ import "./styles.scss";
 const Main = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const dispatch: AppDispatch = useDispatch();
+  const [search] = useSearchParams();
   const repositories = useSelector((state: RootState) => state.repositories);
-  const [search, setSearch] = useState("");
-  const debouncedSearch = useDebounce(search, 500);
+  const [searchValue, setSearchValue] = useState(search.get("search") || "");
+  const debouncedSearch = useDebounce(searchValue, 500);
   const { data, repositoryCount, edges } = repositories;
+  const navigate = useNavigate();
 
   const handleSearch = useCallback(
     (e: React.FormEvent<EventTarget>) => {
-      setSearch((e.target as HTMLInputElement).value);
+      setSearchValue((e.target as HTMLInputElement).value);
     },
-    [setSearch]
+    [searchValue]
   );
 
   const setPage = useCallback(
@@ -31,12 +34,18 @@ const Main = () => {
   );
 
   useEffect(() => {
+    navigate(`?search=${debouncedSearch}`);
     dispatch(fetchData(debouncedSearch, ""));
   }, [dispatch, debouncedSearch]);
 
+  useEffect(() => {
+    const value = search.get("search") || "";
+    setSearchValue(value);
+  }, [search, setSearchValue]);
+
   return (
     <div className="main-container">
-      <Header handleSearch={handleSearch} totalCount={repositoryCount} />
+      <Header handleSearch={handleSearch} searchValue={searchValue} totalCount={repositoryCount} />
       <CardsContainer repositories={data} />
       <Pagination
         currentPage={currentPage}
