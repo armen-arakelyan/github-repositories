@@ -1,6 +1,16 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { Edges } from '../../types';
 
-const initialState = {
+interface ISlice {
+  loading: boolean;
+  error: null,
+  data: [],
+  repositoryCount: number;
+  endCursor: string;
+  edges: Edges[]
+}
+
+const initialState: ISlice = {
   loading: false,
   error: null,
   data: [],

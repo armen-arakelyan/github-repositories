@@ -8,47 +8,44 @@ import { fetchData } from "../../redux/Repositories/action";
 import "./styles.scss";
 
 const Main = () => {
-    const [currentPage, setCurrentPage] = useState(1);
-    const dispatch: AppDispatch = useDispatch();
-    const repositories = useSelector((state: RootState) => state.repositories);
-    const [search, setSearch] = useState("");
-    const debouncedSearch = useDebounce(search, 500);
-    const { data, repositoryCount, edges } = repositories;
+  const [currentPage, setCurrentPage] = useState(1);
+  const dispatch: AppDispatch = useDispatch();
+  const repositories = useSelector((state: RootState) => state.repositories);
+  const [search, setSearch] = useState("");
+  const debouncedSearch = useDebounce(search, 500);
+  const { data, repositoryCount, edges } = repositories;
 
-    const handleSearch = useCallback(
-        (e: React.FormEvent<EventTarget>) => {
-            setSearch((e.target as HTMLInputElement).value);
-        },
-        [setSearch]
-    );
+  const handleSearch = useCallback(
+    (e: React.FormEvent<EventTarget>) => {
+      setSearch((e.target as HTMLInputElement).value);
+    },
+    [setSearch]
+  );
 
-    const setPage = useCallback(
-        (page: number) => {
-            setCurrentPage(page);
-            // @ts-ignore
-            console.log('>>>', edges[edges.length - 1]?.cursor);
-            // @ts-ignore
-            dispatch(fetchData(debouncedSearch, edges[edges.length - 1]?.cursor));
-        },
-        [dispatch, debouncedSearch, data]
-    );
+  const setPage = useCallback(
+    (page: number) => {
+      setCurrentPage(page);
+      dispatch(fetchData(debouncedSearch, edges[edges.length - 1].cursor || repositories.endCursor));
+    },
+    [dispatch, debouncedSearch, edges, repositories.endCursor]
+  );
 
-    useEffect(() => {
-        dispatch(fetchData(debouncedSearch, ""));
-    }, [dispatch, debouncedSearch]);
+  useEffect(() => {
+    dispatch(fetchData(debouncedSearch, ""));
+  }, [dispatch, debouncedSearch]);
 
-    return (
-        <div className="main-container">
-            <Header handleSearch={handleSearch} totalCount={repositoryCount} />
-            <CardsContainer repositories={data} />
-            <Pagination
-                currentPage={currentPage}
-                setCurrentPage={setPage}
-                totalPosts={repositoryCount}
-                maxSize={5}
-            />
-        </div>
-    );
+  return (
+    <div className="main-container">
+      <Header handleSearch={handleSearch} totalCount={repositoryCount} />
+      <CardsContainer repositories={data} />
+      <Pagination
+        currentPage={currentPage}
+        setCurrentPage={setPage}
+        totalPosts={repositoryCount}
+        maxSize={5}
+      />
+    </div>
+  );
 };
 
 export default Main;
