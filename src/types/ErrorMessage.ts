@@ -4,4 +4,4 @@ interface ErrorMessage {
 
 export type {
     ErrorMessage
-}
+};
