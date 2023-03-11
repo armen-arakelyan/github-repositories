@@ -62,7 +62,7 @@ const Main = () => {
       <Pagination
         currentPage={currentPage}
         setCurrentPage={setPage}
-        totalPosts={repositoryCount}
+        totalPosts={Math.ceil(repositoryCount / 10)}
         maxSize={5}
       />
     </div>
