@@ -15,7 +15,8 @@ const Main = () => {
   const repositories = useSelector((state: RootState) => state.repositories);
   const [searchValue, setSearchValue] = useState(search.get("search") || "");
   const debouncedSearch = useDebounce(searchValue, 500);
-  const { data, repositoryCount, edges } = repositories;
+  const { data, repositoryCount, pageInfo } = repositories;
+  const { endCursor } = pageInfo;
   const navigate = useNavigate();
 
   const handleSearch = useCallback(
@@ -27,20 +28,22 @@ const Main = () => {
 
   const setPage = useCallback(
     (page: number) => {
-      setCurrentPage(page);
-      dispatch(
-        fetchData(
-          debouncedSearch,
-          edges[edges.length - 1]?.cursor || repositories.endCursor
-        )
+      if (page === currentPage) return;
+      const codedEndCursor = btoa(
+        `${endCursor ? atob(endCursor).split(":")[0] : "cursor"}:${
+          page.toString().length === 1 ? `${page}0` : page
+        }`
       );
+      dispatch(fetchData(debouncedSearch, codedEndCursor));
+      setCurrentPage(page);
     },
-    [dispatch, debouncedSearch, edges, repositories.endCursor]
+    [dispatch, debouncedSearch, endCursor]
   );
 
   useEffect(() => {
     navigate(`?search=${debouncedSearch}`);
     dispatch(fetchData(debouncedSearch, ""));
+    setPage(1);
   }, [dispatch, debouncedSearch]);
 
   useEffect(() => {
@@ -59,7 +62,7 @@ const Main = () => {
       <Pagination
         currentPage={currentPage}
         setCurrentPage={setPage}
-        totalPosts={repositoryCount}
+        totalPosts={Math.ceil(repositoryCount / 10)}
         maxSize={5}
       />
     </div>

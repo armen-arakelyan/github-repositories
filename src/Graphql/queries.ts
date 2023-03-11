@@ -33,25 +33,20 @@ export const LOAD_REPOSITORIES = gql`
       after: $after
     ) {
       repositoryCount
-      edges {
-        cursor
-        node {
-          ... on Repository {
-            id
-            name
-            stargazerCount
-            pushedAt
-            url
-            owner {
-              login
-            }
-          }
-        }
-      }
       pageInfo {
         endCursor
-        hasNextPage
-        startCursor
+      }
+      nodes {
+        ... on Repository {
+          id
+          name
+          stargazerCount
+          pushedAt
+          url
+          owner {
+            login
+          }
+        }
       }
     }
   }
@@ -62,25 +57,20 @@ export const LOAD_VIEWER_REPOSITORIES = gql`
     viewer {
       repositories(first: $first, after: $after) {
         totalCount
-        edges {
-          cursor
-          node {
-            ... on Repository {
-              id
-              name
-              stargazerCount
-              pushedAt
-              url
-              owner {
-                login
-              }
-            }
-          }
-        }
         pageInfo {
           endCursor
-          hasNextPage
-          startCursor
+        }
+        nodes {
+          ... on Repository {
+            id
+            name
+            stargazerCount
+            pushedAt
+            url
+            owner {
+              login
+            }
+          }
         }
       }
     }

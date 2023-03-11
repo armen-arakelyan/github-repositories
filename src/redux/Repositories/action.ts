@@ -3,34 +3,34 @@ import {
   LOAD_REPOSITORIES,
   LOAD_VIEWER_REPOSITORIES,
 } from "../../Graphql/queries";
-import { AppDispatch, ErrorMessage, Edges } from "../../types";
+import { AppDispatch, ErrorMessage } from "../../types";
 import { apolloClient } from "../../helpers";
 
 export const fetchData =
-  (searchQuery: string, cursor?: string) =>
+  (searchQuery: string, endCursor: string) =>
   async (dispatch: AppDispatch): Promise<void> => {
     try {
       const showViewerData = !!searchQuery;
       dispatch(slice.actions.startLoading());
       const { data } = await apolloClient.query({
         query: showViewerData ? LOAD_REPOSITORIES : LOAD_VIEWER_REPOSITORIES,
-        variables: { searchQuery, first: 10, after: cursor || null },
+        variables: { searchQuery, first: 10, after: endCursor || null },
       });
-      const { edges = [], pageInfo } = showViewerData
+      const { nodes = [], pageInfo } = showViewerData
         ? data.search
         : data.viewer.repositories;
-      const { endCursor = "", hasNextPage = false } = pageInfo;
-      const nodes = edges.map((edge: Edges) => edge.node);
       const resositoriesCount = showViewerData
         ? data.search.repositoryCount
         : data.viewer.repositories.totalCount;
+
       dispatch(
         slice.actions.fetchDataSuccess({
           repositories: nodes,
           repositoryCount: resositoriesCount,
-          endCursor,
-          hasNextPage,
-          edges,
+          pageInfo: {
+            ...pageInfo,
+            endCursor: endCursor || ''
+          }
         })
       );
     } catch (error) {

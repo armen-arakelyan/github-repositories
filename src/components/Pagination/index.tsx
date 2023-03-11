@@ -29,7 +29,7 @@ const Pagination: React.FC<PaginationProps> = ({
     );
   }, [totalPosts, currentPage, maxSize]);
 
-  if (totalPosts <= 10) {
+  if (totalPosts <= 1) {
     return null;
   }
 
