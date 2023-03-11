@@ -9,9 +9,4 @@ interface Repository {
   }
 }
 
-interface Edges {
-  cursor: string;
-  node: Repository
-}
-
-export type { Repository, Edges };
+export type { Repository };

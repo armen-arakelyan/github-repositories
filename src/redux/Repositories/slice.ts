@@ -1,13 +1,16 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { Edges } from '../../types';
 
 interface ISlice {
   loading: boolean;
   error: null,
   data: [],
   repositoryCount: number;
-  endCursor: string;
-  edges: Edges[]
+  pageInfo: {
+    startCursor: string;
+    endCursor: string;
+    hasNextPage: boolean;
+    hasPreviousPage: boolean;
+  }
 }
 
 const initialState: ISlice = {
@@ -15,8 +18,12 @@ const initialState: ISlice = {
   error: null,
   data: [],
   repositoryCount: 0,
-  endCursor: '',
-  edges: []
+  pageInfo: {
+    startCursor: '',
+    endCursor: '',
+    hasNextPage: false,
+    hasPreviousPage: false
+  }
 };
 
 const slice = createSlice({
@@ -31,8 +38,7 @@ const slice = createSlice({
       state.error = null;
       state.data = action.payload.repositories;
       state.repositoryCount = action.payload.repositoryCount;
-      state.endCursor = action.payload.endCursor;
-      state.edges = action.payload.edges;
+      state.pageInfo = action.payload.pageInfo;
     },
     fetchDataFail: (state, action) => {
       state.loading = false;

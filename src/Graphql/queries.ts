@@ -25,17 +25,49 @@ export const LOAD_REPOSITORIES = gql`
     $searchQuery: String!
     $first: Int!
     $after: String
+    $before: String
   ) {
     search(
       query: $searchQuery
       type: REPOSITORY
       first: $first
-      after: $after
+      after: $after,
+      before: $before
     ) {
       repositoryCount
-      edges {
-        cursor
-        node {
+      pageInfo {
+        endCursor
+        hasNextPage
+        startCursor
+      }
+      nodes {
+        ... on Repository {
+          id
+          name
+          stargazerCount
+          pushedAt
+          url
+          owner {
+            login
+          }
+        }
+      }
+    }
+  }
+`;
+
+export const LOAD_VIEWER_REPOSITORIES = gql`
+  query GetViewerRepositories($first: Int!, $after: String, $before: String) {
+    viewer {
+      repositories(first: $first, after: $after, before: $before) {
+        totalCount
+        pageInfo {
+          endCursor
+          hasNextPage
+          hasPreviousPage
+          startCursor
+        }
+        nodes {
           ... on Repository {
             id
             name
@@ -46,41 +78,6 @@ export const LOAD_REPOSITORIES = gql`
               login
             }
           }
-        }
-      }
-      pageInfo {
-        endCursor
-        hasNextPage
-        startCursor
-      }
-    }
-  }
-`;
-
-export const LOAD_VIEWER_REPOSITORIES = gql`
-  query GetViewerRepositories($first: Int!, $after: String) {
-    viewer {
-      repositories(first: $first, after: $after) {
-        totalCount
-        edges {
-          cursor
-          node {
-            ... on Repository {
-              id
-              name
-              stargazerCount
-              pushedAt
-              url
-              owner {
-                login
-              }
-            }
-          }
-        }
-        pageInfo {
-          endCursor
-          hasNextPage
-          startCursor
         }
       }
     }

@@ -15,7 +15,8 @@ const Main = () => {
   const repositories = useSelector((state: RootState) => state.repositories);
   const [searchValue, setSearchValue] = useState(search.get("search") || "");
   const debouncedSearch = useDebounce(searchValue, 500);
-  const { data, repositoryCount, edges } = repositories;
+  const { data, repositoryCount, pageInfo } = repositories;
+  const { endCursor, startCursor } = pageInfo;
   const navigate = useNavigate();
 
   const handleSearch = useCallback(
@@ -31,16 +32,18 @@ const Main = () => {
       dispatch(
         fetchData(
           debouncedSearch,
-          edges[edges.length - 1]?.cursor || repositories.endCursor
+          page === 1 ? '' : startCursor,
+          page === 1 ? '' : endCursor
         )
       );
+      setCurrentPage(page);
     },
-    [dispatch, debouncedSearch, edges, repositories.endCursor]
+    [dispatch, debouncedSearch, endCursor, startCursor]
   );
 
   useEffect(() => {
     navigate(`?search=${debouncedSearch}`);
-    dispatch(fetchData(debouncedSearch, ""));
+    dispatch(fetchData(debouncedSearch, "", ""));
   }, [dispatch, debouncedSearch]);
 
   useEffect(() => {
