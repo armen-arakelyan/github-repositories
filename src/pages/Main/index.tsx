@@ -7,16 +7,13 @@ import { AppDispatch } from "../../types";
 import { fetchData } from "../../redux/Repositories/action";
 import "./styles.scss";
 
-const selectRepositories = (state: RootState) => state;
-
 const Main = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const dispatch: AppDispatch = useDispatch();
-  const state = useSelector(selectRepositories);
+  const repositories = useSelector((state: RootState) => state.repositories);
   const [search, setSearch] = useState("");
   const debouncedSearch = useDebounce(search, 500);
-
-  const { data, repositoryCount } = state.repositories;
+  const { data, repositoryCount, edges } = repositories;
 
   const handleSearch = useCallback(
     (e: React.FormEvent<EventTarget>) => {
@@ -25,9 +22,17 @@ const Main = () => {
     [setSearch]
   );
 
+  const setPage = useCallback(
+    (page: number) => {
+      setCurrentPage(page);
+      dispatch(fetchData(debouncedSearch, edges[edges.length - 1].cursor || repositories.endCursor));
+    },
+    [dispatch, debouncedSearch, edges, repositories.endCursor]
+  );
+
   useEffect(() => {
-    dispatch(fetchData(debouncedSearch, currentPage));
-  }, [debouncedSearch, dispatch, currentPage]);
+    dispatch(fetchData(debouncedSearch, ""));
+  }, [dispatch, debouncedSearch]);
 
   return (
     <div className="main-container">
@@ -35,7 +40,7 @@ const Main = () => {
       <CardsContainer repositories={data} />
       <Pagination
         currentPage={currentPage}
-        setCurrentPage={setCurrentPage}
+        setCurrentPage={setPage}
         totalPosts={repositoryCount}
         maxSize={5}
       />

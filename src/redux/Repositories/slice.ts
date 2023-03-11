@@ -1,10 +1,22 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { Edges } from '../../types';
 
-const initialState = {
+interface ISlice {
+  loading: boolean;
+  error: null,
+  data: [],
+  repositoryCount: number;
+  endCursor: string;
+  edges: Edges[]
+}
+
+const initialState: ISlice = {
   loading: false,
   error: null,
   data: [],
-  repositoryCount: 0
+  repositoryCount: 0,
+  endCursor: '',
+  edges: []
 };
 
 const slice = createSlice({
@@ -19,6 +31,8 @@ const slice = createSlice({
       state.error = null;
       state.data = action.payload.repositories;
       state.repositoryCount = action.payload.repositoryCount;
+      state.endCursor = action.payload.endCursor;
+      state.edges = action.payload.edges;
     },
     fetchDataFail: (state, action) => {
       state.loading = false;
