@@ -28,7 +28,12 @@ const Main = () => {
   const setPage = useCallback(
     (page: number) => {
       setCurrentPage(page);
-      dispatch(fetchData(debouncedSearch, edges[edges.length - 1].cursor || repositories.endCursor));
+      dispatch(
+        fetchData(
+          debouncedSearch,
+          edges[edges.length - 1]?.cursor || repositories.endCursor
+        )
+      );
     },
     [dispatch, debouncedSearch, edges, repositories.endCursor]
   );
@@ -45,7 +50,11 @@ const Main = () => {
 
   return (
     <div className="main-container">
-      <Header handleSearch={handleSearch} searchValue={searchValue} totalCount={repositoryCount} />
+      <Header
+        handleSearch={handleSearch}
+        searchValue={searchValue}
+        totalCount={repositoryCount}
+      />
       <CardsContainer repositories={data} />
       <Pagination
         currentPage={currentPage}
