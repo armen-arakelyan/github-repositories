@@ -7,14 +7,14 @@ import { AppDispatch, ErrorMessage } from "../../types";
 import { apolloClient } from "../../helpers";
 
 export const fetchData =
-  (searchQuery: string, endCursor: string, startCursor: string) =>
+  (searchQuery: string, endCursor: string) =>
   async (dispatch: AppDispatch): Promise<void> => {
     try {
       const showViewerData = !!searchQuery;
       dispatch(slice.actions.startLoading());
       const { data } = await apolloClient.query({
         query: showViewerData ? LOAD_REPOSITORIES : LOAD_VIEWER_REPOSITORIES,
-        variables: { searchQuery, first: 10, after: endCursor || null, before: startCursor || null },
+        variables: { searchQuery, first: 10, after: endCursor || null },
       });
       const { nodes = [], pageInfo } = showViewerData
         ? data.search
@@ -27,7 +27,10 @@ export const fetchData =
         slice.actions.fetchDataSuccess({
           repositories: nodes,
           repositoryCount: resositoriesCount,
-          pageInfo
+          pageInfo: {
+            ...pageInfo,
+            endCursor: endCursor || ''
+          }
         })
       );
     } catch (error) {

@@ -25,20 +25,16 @@ export const LOAD_REPOSITORIES = gql`
     $searchQuery: String!
     $first: Int!
     $after: String
-    $before: String
   ) {
     search(
       query: $searchQuery
       type: REPOSITORY
       first: $first
-      after: $after,
-      before: $before
+      after: $after
     ) {
       repositoryCount
       pageInfo {
         endCursor
-        hasNextPage
-        startCursor
       }
       nodes {
         ... on Repository {
@@ -57,15 +53,12 @@ export const LOAD_REPOSITORIES = gql`
 `;
 
 export const LOAD_VIEWER_REPOSITORIES = gql`
-  query GetViewerRepositories($first: Int!, $after: String, $before: String) {
+  query GetViewerRepositories($first: Int!, $after: String) {
     viewer {
-      repositories(first: $first, after: $after, before: $before) {
+      repositories(first: $first, after: $after) {
         totalCount
         pageInfo {
           endCursor
-          hasNextPage
-          hasPreviousPage
-          startCursor
         }
         nodes {
           ... on Repository {
