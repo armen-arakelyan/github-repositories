@@ -4,6 +4,9 @@ interface Repository {
   name: string;
   pushedAt: Date;
   stargazerCount: number;
+  owner: {
+    login: string
+  }
 }
 
 interface Edges {

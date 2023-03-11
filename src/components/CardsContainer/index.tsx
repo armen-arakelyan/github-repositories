@@ -1,5 +1,5 @@
 import { memo, Suspense } from "react";
-import { Repository } from '../../types';
+import { Repository } from "../../types";
 import { Card } from "..";
 import "./styles.scss";
 
@@ -14,11 +14,11 @@ const CardsContainer = ({ repositories }: IProps) => (
         repositories.map((itm: Repository) => (
           <Card
             key={itm.id}
+            name={itm.owner.login}
             title={itm.name}
             stars={itm.stargazerCount}
             lastCommit={itm.pushedAt}
             url={itm.url}
-            id={itm.id}
           />
         ))
       ) : (

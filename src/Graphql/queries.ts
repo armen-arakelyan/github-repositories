@@ -1,5 +1,25 @@
 import { gql } from "@apollo/client";
 
+export const LOAD_REPOSITORY = gql`
+query GetRepositoryInfo($name: String!, $owner: String!) {
+  repository(name: $name, owner: $owner) {
+    name
+    stargazerCount
+    pushedAt
+    shortDescriptionHTML
+    owner {
+      login
+      avatarUrl
+    }
+    languages(first: 100) {
+      nodes {
+        name
+      }
+    }
+  }
+}
+`;
+
 export const LOAD_REPOSITORIES = gql`
   query SearchRepositories(
     $searchQuery: String!
@@ -22,6 +42,9 @@ export const LOAD_REPOSITORIES = gql`
             stargazerCount
             pushedAt
             url
+            owner {
+              login
+            }
           }
         }
       }
